@@ -5,6 +5,7 @@ namespace App\Filament\Resources\Tasks;
 use App\Filament\Resources\Tasks\Pages\CreateTask;
 use App\Filament\Resources\Tasks\Pages\EditTask;
 use App\Filament\Resources\Tasks\Pages\ListTasks;
+use App\Filament\Resources\Tasks\Pages\ViewTask;
 use App\Filament\Resources\Tasks\Schemas\TaskForm;
 use App\Filament\Resources\Tasks\Tables\TasksTable;
 use App\Models\Task;
@@ -42,6 +43,7 @@ class TaskResource extends Resource
         return [
             'index' => ListTasks::route('/'),
             'create' => CreateTask::route('/create'),
+            'view' => ViewTask::route('/{record}'),
             'edit' => EditTask::route('/{record}/edit'),
         ];
     }

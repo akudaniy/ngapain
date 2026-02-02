@@ -15,6 +15,11 @@ class TaskObserver
             $task->completed_at = now();
         }
 
+        // Automate company_id from project if not set
+        if (!$task->company_id && $task->project_id) {
+            $task->company_id = $task->project->company_id;
+        }
+
         // Data Integrity: A TaskObserver ensures that when a status hits 'done', the completed_at timestamp is locked.
         if ($task->getOriginal('status') === 'done' && $task->isDirty('completed_at')) {
             $task->completed_at = $task->getOriginal('completed_at');

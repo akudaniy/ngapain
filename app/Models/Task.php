@@ -24,11 +24,13 @@ class Task extends Model
         'status',
         'effort_score',
         'completed_at',
+        'due_at',
     ];
 
     protected $casts = [
         'is_self_initiated' => 'boolean',
         'completed_at' => 'datetime',
+        'due_at' => 'datetime',
         'effort_score' => 'integer',
     ];
 

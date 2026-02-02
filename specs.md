@@ -35,6 +35,7 @@ The application is hosted within a Dockerized environment. **No commands should 
 * **`is_self_initiated`** (boolean, default: false) — *Flag for staff-originated tasks.*
 * `status` (enum: todo, doing, done)
 * `effort_score` (integer, default: 0) — *Range 1-10.*
+* `due_at` (timestamp, nullable) — *Target deadline for the task.*
 * `completed_at` (timestamp, nullable)
 
 #### **Daily_Accomplishments Table (The Pulse)**

@@ -22,6 +22,7 @@ return new class extends Migration
             $table->enum('status', ['todo', 'doing', 'done'])->default('todo');
             $table->integer('effort_score')->default(0);
             $table->timestamp('completed_at')->nullable();
+            $table->timestamp('due_at')->nullable();
             $table->timestamps();
         });
     }
