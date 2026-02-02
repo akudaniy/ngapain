@@ -1,0 +1,48 @@
+<?php
+
+namespace App\Filament\Resources\DailyAccomplishments;
+
+use App\Filament\Resources\DailyAccomplishments\Pages\CreateDailyAccomplishment;
+use App\Filament\Resources\DailyAccomplishments\Pages\EditDailyAccomplishment;
+use App\Filament\Resources\DailyAccomplishments\Pages\ListDailyAccomplishments;
+use App\Filament\Resources\DailyAccomplishments\Schemas\DailyAccomplishmentForm;
+use App\Filament\Resources\DailyAccomplishments\Tables\DailyAccomplishmentsTable;
+use App\Models\DailyAccomplishment;
+use BackedEnum;
+use Filament\Resources\Resource;
+use Filament\Schemas\Schema;
+use Filament\Support\Icons\Heroicon;
+use Filament\Tables\Table;
+
+class DailyAccomplishmentResource extends Resource
+{
+    protected static ?string $model = DailyAccomplishment::class;
+
+    protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedRectangleStack;
+
+    public static function form(Schema $schema): Schema
+    {
+        return DailyAccomplishmentForm::configure($schema);
+    }
+
+    public static function table(Table $table): Table
+    {
+        return DailyAccomplishmentsTable::configure($table);
+    }
+
+    public static function getRelations(): array
+    {
+        return [
+            //
+        ];
+    }
+
+    public static function getPages(): array
+    {
+        return [
+            'index' => ListDailyAccomplishments::route('/'),
+            'create' => CreateDailyAccomplishment::route('/create'),
+            'edit' => EditDailyAccomplishment::route('/{record}/edit'),
+        ];
+    }
+}
