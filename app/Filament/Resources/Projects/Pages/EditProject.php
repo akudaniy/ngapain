@@ -13,7 +13,8 @@ class EditProject extends EditRecord
     protected function getHeaderActions(): array
     {
         return [
-            \Filament\Actions\ViewAction::make(),
+            \Filament\Actions\ViewAction::make()
+                ->color('primary'),
             DeleteAction::make(),
         ];
     }

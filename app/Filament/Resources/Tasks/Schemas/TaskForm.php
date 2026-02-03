@@ -21,7 +21,15 @@ class TaskForm
                 ->relationship('project', 'name')
                 ->required()
                 ->searchable()
-                ->preload();
+                ->preload()
+                ->live()
+                ->afterStateUpdated(function (Get $get, callable $set, $livewire) {
+                    $isManager = static::isProjectManager($get, $livewire);
+                    $set('is_self_initiated', !$isManager);
+                    if (!$isManager) {
+                        $set('assigned_user_id', auth()->id());
+                    }
+                });
         }
 
         $components = array_merge($components, [
@@ -33,8 +41,8 @@ class TaskForm
                 ->columnSpanFull(),
             Toggle::make('is_self_initiated')
                 ->label('Is Self Initiated')
-                ->default(fn () => !auth()->user()->can('Assign:Task'))
-                ->disabled(fn () => !auth()->user()->can('Assign:Task'))
+                ->default(fn (Get $get, $livewire) => !static::isProjectManager($get, $livewire))
+                ->disabled(fn (Get $get, $livewire) => !static::isProjectManager($get, $livewire))
                 ->dehydrated()
                 ->live()
                 ->afterStateUpdated(function ($state, callable $set) {
@@ -43,12 +51,17 @@ class TaskForm
                     }
                 }),
             Select::make('assigned_user_id')
-                ->relationship('assignedUser', 'name')
+                ->relationship('assignedUser', 'name', modifyQueryUsing: function ($query, Get $get, $livewire) {
+                    $projectId = $get('project_id') ?? $livewire->ownerRecord?->id;
+                    if ($projectId) {
+                        return $query->whereHas('projects', fn ($q) => $q->where('projects.id', $projectId));
+                    }
+                })
                 ->label('Assigned To')
                 ->searchable()
                 ->preload()
                 ->default(fn () => auth()->id())
-                ->disabled(fn (Get $get) => $get('is_self_initiated') || !auth()->user()->can('Assign:Task'))
+                ->disabled(fn (Get $get, $livewire) => $get('is_self_initiated') || !static::isProjectManager($get, $livewire))
                 ->dehydrated(),
             Select::make('status')
                 ->options([
@@ -66,10 +79,24 @@ class TaskForm
                 ->minValue(1)
                 ->maxValue(10)
                 ->default(0)
-                ->hidden(fn () => !auth()->user()->can('Assign:Task')) // Hidden for creators who aren't managers
-                ->disabled(fn () => !auth()->user()->can('Assign:Task')),
+                ->hidden(fn (Get $get, $livewire) => !static::isProjectManager($get, $livewire))
+                ->disabled(fn (Get $get, $livewire) => !static::isProjectManager($get, $livewire)),
         ]);
 
         return $schema->components($components);
+    }
+
+    protected static function isProjectManager(Get $get, $livewire): bool
+    {
+        $projectId = $get('project_id') ?? $livewire->ownerRecord?->id;
+
+        if (! $projectId) {
+            return false;
+        }
+
+        return auth()->user()->projects()
+            ->where('projects.id', $projectId)
+            ->wherePivot('role', 'manager')
+            ->exists();
     }
 }
