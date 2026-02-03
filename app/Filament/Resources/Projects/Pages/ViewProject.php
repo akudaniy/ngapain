@@ -17,11 +17,4 @@ class ViewProject extends ViewRecord
             EditAction::make(),
         ];
     }
-
-    public function getRelationManagers(): array
-    {
-        return [
-            TasksRelationManager::class,
-        ];
-    }
 }

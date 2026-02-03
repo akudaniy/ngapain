@@ -55,6 +55,7 @@ class UsersRelationManager extends RelationManager
             ])
             ->headerActions([
                 AttachAction::make()
+                    ->authorize(fn () => $this->isProjectManager())
                     ->preloadRecordSelect()
                     ->recordSelectSearchColumns(['name', 'email'])
                     ->form(fn (AttachAction $action): array => [
@@ -69,8 +70,18 @@ class UsersRelationManager extends RelationManager
                     ]),
             ])
             ->actions([
-                EditAction::make(),
-                DetachAction::make(),
+                EditAction::make()
+                    ->authorize(fn () => $this->isProjectManager()),
+                DetachAction::make()
+                    ->authorize(fn () => $this->isProjectManager()),
             ]);
+    }
+
+    protected function isProjectManager(): bool
+    {
+        return $this->getOwnerRecord()->users()
+            ->where('users.id', auth()->id())
+            ->wherePivot('role', 'manager')
+            ->exists();
     }
 }
