@@ -7,7 +7,7 @@ use Filament\Forms\Components\DatePicker;
 use Filament\Forms\Components\MarkdownEditor;
 use Filament\Forms\Components\Placeholder;
 use Filament\Forms\Components\Select;
-use Filament\Forms\Set;
+use Filament\Schemas\Components\Utilities\Set;
 use Filament\Schemas\Schema;
 use Illuminate\Support\HtmlString;
 
@@ -34,6 +34,9 @@ class DailyAccomplishmentForm
                     ->afterStateUpdated(fn (Set $set, $state) => self::updateTaskSnapshot($set, $state)),
                 MarkdownEditor::make('content')
                     ->required()
+                    ->disableToolbarButtons([
+                        'attachFiles',
+                    ])
                     ->columnSpanFull(),
                 Placeholder::make('tasks_completed_today')
                     ->label('Tasks Completed Today')

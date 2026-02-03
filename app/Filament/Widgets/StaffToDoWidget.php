@@ -24,10 +24,12 @@ class StaffToDoWidget extends TableWidget
             ->columns([
                 TextColumn::make('project.name')
                     ->label('Project')
+                    ->url(fn (Task $record): string => route('filament.admin.resources.projects.view', $record->project))
                     ->searchable()
                     ->sortable(),
                 TextColumn::make('name')
                     ->label('Task')
+                    ->url(fn (Task $record): string => route('filament.admin.resources.tasks.view', $record))
                     ->description(fn (Task $record): string => $record->description ?? ''),
                 TextColumn::make('status')
                     ->badge()
@@ -36,9 +38,6 @@ class StaffToDoWidget extends TableWidget
                         'doing' => 'warning',
                         'done' => 'success',
                     }),
-                TextColumn::make('effort_score')
-                    ->numeric()
-                    ->sortable(),
             ]);
     }
 }
