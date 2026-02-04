@@ -12,6 +12,8 @@ class StaffToDoWidget extends TableWidget
 {
     protected static ?string $heading = 'My To-Do Tasks';
 
+    protected static ?int $sort = 1;
+
     public function table(Table $table): Table
     {
         return $table
