@@ -70,7 +70,39 @@ class TaskForm
                     'done' => 'Done',
                 ])
                 ->required()
-                ->default('todo'),
+                ->default('todo')
+                ->disableOptionWhen(function ($value, $record) {
+                    if (! $record) {
+                        return false;
+                    }
+
+                    $statusOrder = [
+                        'todo' => 1,
+                        'doing' => 2,
+                        'done' => 3,
+                    ];
+
+                    return $statusOrder[$value] < $statusOrder[$record->status];
+                })
+                ->rules([
+                    function ($get, $record) {
+                        return function (string $attribute, $value, $fail) use ($record) {
+                            if (! $record) {
+                                return;
+                            }
+
+                            $statusOrder = [
+                                'todo' => 1,
+                                'doing' => 2,
+                                'done' => 3,
+                            ];
+
+                            if ($statusOrder[$value] < $statusOrder[$record->status]) {
+                                $fail("The status cannot be changed backward from {$record->status} to {$value}.");
+                            }
+                        };
+                    },
+                ]),
             DateTimePicker::make('due_at')
                 ->label('Due Date')
                 ->native(false),

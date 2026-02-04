@@ -46,7 +46,8 @@ class UserInfolist
                             ])
                             ->columns(3)
                             ->grid(1)
-                            ->columnSpanFull(),
+                            ->columnSpanFull()
+                            ->state(fn ($record) => $record->tasks()->latest()->limit(3)->get()),
                     ])
                     ->collapsible(),
 
@@ -66,7 +67,8 @@ class UserInfolist
                             ])
                             ->columns(2)
                             ->grid(1)
-                            ->columnSpanFull(),
+                            ->columnSpanFull()
+                            ->state(fn ($record) => $record->dailyAccomplishments()->latest()->limit(3)->get()),
                     ])
                     ->collapsible(),
 

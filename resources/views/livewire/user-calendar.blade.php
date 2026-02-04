@@ -38,7 +38,23 @@
                     </time>
                 </div>
 
-                <div class="mt-2 text-[10px] text-gray-400 group-hover:text-primary-500 transition-colors uppercase font-medium">
+                <div class="mt-2 space-y-1">
+                    @if($day['hasTasks'])
+                        <div class="flex items-center text-[10px] text-green-600 dark:text-green-500 font-bold" title="{{ $day['taskCount'] }} tasks completed">
+                            <x-heroicon-o-check-circle class="w-3 h-3 mr-1" />
+                            <span>{{ $day['taskCount'] }} Done</span>
+                        </div>
+                    @endif
+
+                    @if($day['hasAccomplishment'])
+                        <div class="flex items-center text-[10px] text-amber-600 dark:text-amber-500 font-bold" title="Daily accomplishment recorded">
+                            <x-heroicon-o-sparkles class="w-3 h-3 mr-1" />
+                            <span>Pulse Entry</span>
+                        </div>
+                    @endif
+                </div>
+
+                <div class="mt-auto pt-2 text-[9px] text-gray-400 group-hover:text-primary-500 transition-colors uppercase font-medium">
                     View Activity
                 </div>
             </a>

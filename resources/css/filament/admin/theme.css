@@ -20,7 +20,7 @@
 
 @layer utilities {
     .calendar-grid-cell {
-        @apply relative bg-white dark:bg-gray-950 h-28 p-2 transition-all hover:bg-amber-50 dark:hover:bg-amber-900/10 border-r border-b border-gray-100 dark:border-gray-800;
+        @apply relative bg-white dark:bg-gray-950 h-28 p-2 transition-all hover:bg-amber-50 dark:hover:bg-amber-900/10 border-r border-b border-gray-100 dark:border-gray-800 flex flex-col;
     }
 
     .calendar-grid-cell:nth-child(7n) {
