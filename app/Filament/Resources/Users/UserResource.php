@@ -9,6 +9,7 @@ use App\Filament\Resources\Users\Pages\ViewUser;
 use App\Filament\Resources\Users\Schemas\UserForm;
 use App\Filament\Resources\Users\Tables\UsersTable;
 use App\Filament\Resources\Users\Infolists\UserInfolist;
+use App\Filament\Resources\Users\Pages\UserDailyActivity;
 use App\Models\User;
 use BackedEnum;
 use Filament\Resources\Resource;
@@ -50,6 +51,7 @@ class UserResource extends Resource
             'index' => ListUsers::route('/'),
             'create' => CreateUser::route('/create'),
             'view' => ViewUser::route('/{record}'),
+            'stats' => UserDailyActivity::route('/{record}/stats/{date}'),
             'edit' => EditUser::route('/{record}/edit'),
         ];
     }

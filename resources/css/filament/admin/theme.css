@@ -1,0 +1,29 @@
+@import '../../../../vendor/filament/filament/resources/css/theme.css';
+
+@source '../../../../app/Filament/**/*.php';
+@source '../../../../app/Livewire/**/*.php';
+@source '../../../../resources/views/filament/**/*.php';
+@source '../../../../resources/views/livewire/**/*.blade.php';
+
+/* Calendar Custom Styles */
+.calendar-container {
+    --calendar-bg: white;
+    --calendar-border: #e5e7eb;
+    --calendar-today-ring: #f59e0b;
+    /* Amber 500 */
+}
+
+.dark .calendar-container {
+    --calendar-bg: #111827;
+    --calendar-border: #1f2937;
+}
+
+@layer utilities {
+    .calendar-grid-cell {
+        @apply relative bg-white dark:bg-gray-950 h-28 p-2 transition-all hover:bg-amber-50 dark:hover:bg-amber-900/10 border-r border-b border-gray-100 dark:border-gray-800;
+    }
+
+    .calendar-grid-cell:nth-child(7n) {
+        @apply border-r-0;
+    }
+}

@@ -54,7 +54,7 @@ class UserInfolist
                     ->description('Recent accomplishments recorded by the user.')
                     ->components([
                         RepeatableEntry::make('dailyAccomplishments')
-                            ->label('')
+                            ->label('Daily Accomplishments')
                             ->schema([
                                 TextEntry::make('date')
                                     ->date()
@@ -64,10 +64,19 @@ class UserInfolist
                                     ->markdown()
                                     ->limit(150),
                             ])
-                            ->columns(1)
-                            ->grid(2)
+                            ->columns(2)
+                            ->grid(1)
                             ->columnSpanFull(),
                     ])
+                    ->collapsible(),
+
+                Section::make('Activity Calendar')
+                    ->components([
+                        \Filament\Infolists\Components\ViewEntry::make('calendar')
+                            ->view('filament.resources.users.infolists.calendar-entry')
+                            ->columnSpanFull(),
+                    ])
+                    ->columnSpanFull()
                     ->collapsible(),
             ]);
     }
