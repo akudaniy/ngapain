@@ -77,3 +77,43 @@ The application is hosted within a Dockerized environment. **No commands should 
 
 * **HasCompany Trait:** All models (`Project`, `Task`, `Accomplishment`) must use a `HasCompany` trait to support multi-tenant accounting.
 * **Scoping:** Filament resources must be scoped to the active tenant/company context.
+
+---
+
+### 6. Filament v5 Development Guidelines (Crucial)
+
+To avoid recurring errors, follow these specific v5 patterns:
+
+#### **A. Form/Schema Signature**
+The `form()` method has changed. It now uses `Filament\Schemas\Schema` instead of `Filament\Forms\Form`.
+```php
+use Filament\Schemas\Schema;
+
+public function form(Schema $schema): Schema
+{
+    return $schema->components([ ... ]); // Use components() or schema()
+}
+```
+
+#### **B. Component Namespaces**
+Many components (like `Section`, `Grid`, `Fieldset`) have moved to the `Schemas` namespace.
+* **Standard:** `Filament\Schemas\Components\Section`
+* **Inputs:** `Filament\Forms\Components\TextInput` (Inputs generally remain in Forms)
+
+#### **C. Page Properties**
+* **The `$view` property** on `Page` and `Dashboard` classes is **non-static**.
+  ```php
+  protected string $view = 'filament.pages.custom-page';
+  ```
+
+#### **D. Forms on Custom Pages/Livewire**
+You must implement `HasForms` and use `InteractsWithForms`.
+```php
+use Filament\Forms\Concerns\InteractsWithForms;
+use Filament\Forms\Contracts\HasForms;
+
+class MyPage extends Page implements HasForms
+{
+    use InteractsWithForms;
+}
+```

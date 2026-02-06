@@ -51,7 +51,7 @@ class UserInfolist
                     ])
                     ->collapsible(),
 
-                Section::make('Daily Achievements')
+                Section::make('Daily Accomplishments')
                     ->description('Recent accomplishments recorded by the user.')
                     ->components([
                         RepeatableEntry::make('dailyAccomplishments')

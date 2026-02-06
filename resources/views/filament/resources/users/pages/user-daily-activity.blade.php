@@ -27,11 +27,11 @@
         <section class="p-6 bg-white dark:bg-gray-900 rounded-xl shadow-sm border border-gray-200 dark:border-gray-800">
             <h3 class="text-xl font-bold mb-4 flex items-center">
                 <x-heroicon-o-fire class="w-6 h-6 mr-2 text-orange-500" />
-                Daily Achievements
+                Daily Accomplishments
             </h3>
 
             @if($accomplishments->isEmpty())
-                <p class="text-gray-500 dark:text-gray-400 italic">No daily achievements were recorded on this day.</p>
+                <p class="text-gray-500 dark:text-gray-400 italic">No daily accomplishments were recorded on this day.</p>
             @else
                 <div class="space-y-6">
                     @foreach($accomplishments as $acc)
