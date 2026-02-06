@@ -21,6 +21,12 @@ class UserResource extends Resource
 {
     protected static ?string $model = User::class;
 
+    public static function getEloquentQuery(): \Illuminate\Database\Eloquent\Builder
+    {
+        return parent::getEloquentQuery()
+            ->whereDoesntHave('roles', fn ($query) => $query->where('name', 'super_admin'));
+    }
+
     protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedUsers;
 
     public static function form(Schema $schema): Schema

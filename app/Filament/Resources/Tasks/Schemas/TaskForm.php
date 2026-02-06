@@ -52,6 +52,8 @@ class TaskForm
                 }),
             Select::make('assigned_user_id')
                 ->relationship('assignedUser', 'name', modifyQueryUsing: function ($query, Get $get, $livewire) {
+                    $query->whereDoesntHave('roles', fn ($q) => $q->where('name', 'super_admin'));
+
                     $projectId = $get('project_id') ?? $livewire->ownerRecord?->id;
                     if ($projectId) {
                         return $query->whereHas('projects', fn ($q) => $q->where('projects.id', $projectId));

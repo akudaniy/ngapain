@@ -56,6 +56,7 @@ class UsersRelationManager extends RelationManager
             ->headerActions([
                 AttachAction::make()
                     ->authorize(fn () => $this->isProjectManager())
+                    ->recordSelectOptionsQuery(fn ($query) => $query->whereDoesntHave('roles', fn ($q) => $q->where('name', 'super_admin')))
                     ->preloadRecordSelect()
                     ->recordSelectSearchColumns(['name', 'email'])
                     ->form(fn (AttachAction $action): array => [

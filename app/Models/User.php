@@ -66,4 +66,17 @@ class User extends Authenticatable implements FilamentUser
     {
         return $this->hasMany(DailyAccomplishment::class);
     }
+
+    public function canAccessPanel(\Filament\Panel $panel): bool
+    {
+        return $this->hasAnyRole([
+            'super_admin',
+            'manager',
+            'supervisor',
+            'leader',
+            'staff',
+            'observer',
+            'panel_user',
+        ]);
+    }
 }

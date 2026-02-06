@@ -38,7 +38,7 @@ class UsersTable
             ])
             ->filters([
                 \Filament\Tables\Filters\SelectFilter::make('roles')
-                    ->relationship('roles', 'name')
+                    ->relationship('roles', 'name', modifyQueryUsing: fn ($query) => $query->where('name', '!=', 'super_admin'))
                     ->multiple()
                     ->preload(),
             ])
