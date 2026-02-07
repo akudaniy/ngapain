@@ -3,6 +3,9 @@
 namespace App\Observers;
 
 use App\Models\Task;
+use App\Notifications\TaskAssigned;
+use App\Notifications\TaskCompleted;
+use Illuminate\Support\Facades\Notification;
 
 class TaskObserver
 {
@@ -31,7 +34,10 @@ class TaskObserver
      */
     public function created(Task $task): void
     {
-        //
+        // Notify assignee
+        if ($task->assigned_user_id && $task->assigned_user_id !== auth()->id()) {
+            $task->assignedUser->notify(new TaskAssigned($task));
+        }
     }
 
     /**
@@ -39,7 +45,22 @@ class TaskObserver
      */
     public function updated(Task $task): void
     {
-        //
+        // Notify new assignee if changed
+        if ($task->isDirty('assigned_user_id') && $task->assigned_user_id && $task->assigned_user_id !== auth()->id()) {
+            $task->assignedUser->notify(new TaskAssigned($task));
+        }
+
+        // Notify project managers when task is done
+        if ($task->isDirty('status') && $task->status === 'done') {
+            $projectManagers = $task->project->users()
+                ->wherePivot('role', 'manager')
+                ->where('users.id', '!=', auth()->id())
+                ->get();
+
+            if ($projectManagers->isNotEmpty()) {
+                Notification::send($projectManagers, new TaskCompleted($task));
+            }
+        }
     }
 
     /**

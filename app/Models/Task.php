@@ -8,11 +8,22 @@ use Illuminate\Database\Eloquent\Attributes\ObservedBy;
 use Illuminate\Database\Eloquent\Concerns\HasUuids;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
+use Spatie\Activitylog\Traits\LogsActivity;
+use Spatie\Activitylog\LogOptions;
 
 #[ObservedBy(TaskObserver::class)]
 class Task extends Model
 {
-    use HasUuids, HasCompany;
+    use HasUuids, HasCompany, LogsActivity;
+
+    public function getActivitylogOptions(): LogOptions
+    {
+        return LogOptions::defaults()
+            ->logOnly(['name', 'description', 'status', 'priority', 'type', 'assigned_user_id', 'due_at', 'effort_score'])
+            ->logOnlyDirty()
+            ->dontSubmitEmptyLogs();
+    }
 
     public const STATUS_BACKLOG = 'backlog';
     public const STATUS_TODO = 'todo';

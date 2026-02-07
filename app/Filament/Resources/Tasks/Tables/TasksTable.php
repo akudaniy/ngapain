@@ -55,13 +55,17 @@ class TasksTable
                 TextColumn::make('effort_score')
                     ->label('Effort')
                     ->sortable(),
-                TextColumn::make('due_at')
-                    ->label('Due Date')
-                    ->dateTime('M d, Y H:i')
-                    ->sortable(),
                 TextColumn::make('started_at')
                     ->label('Started Date')
-                    ->dateTime('M d, Y H:i')
+                    ->dateTime('M d, Y')
+                    ->sortable(),
+                TextColumn::make('completed_at')
+                    ->label('Completed Date')
+                    ->dateTime('M d, Y')
+                    ->sortable(),
+                TextColumn::make('due_at')
+                    ->label('Due Date')
+                    ->dateTime('M d, Y')
                     ->sortable(),
                 TextColumn::make('keyResult.name')
                     ->label('Key Result')
