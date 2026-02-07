@@ -68,10 +68,48 @@ class TaskForm
                 ->default(fn () => auth()->id())
                 ->disabled(fn (Get $get, $livewire) => $get('is_self_initiated') || !static::isProjectManager($get, $livewire))
                 ->dehydrated(),
+            Select::make('parent_id')
+                ->relationship('parent', 'name', modifyQueryUsing: function ($query, Get $get, $livewire, $record) {
+                    $projectId = $get('project_id') ?? $livewire->ownerRecord?->id;
+                    if ($projectId) {
+                        $query->where('project_id', $projectId);
+                    }
+                    if ($record) {
+                        $query->where('id', '!=', $record->id);
+                    }
+                })
+                ->label('Parent Task')
+                ->searchable()
+                ->preload(),
+            Select::make('key_result_id')
+                ->relationship('keyResult', 'name')
+                ->label('Key Result (OKR)')
+                ->searchable()
+                ->preload(),
+            Select::make('type')
+                ->options([
+                    'task' => 'Task',
+                    'bug' => 'Bug',
+                    'improvement' => 'Improvement',
+                    'refactor' => 'Refactor',
+                ])
+                ->required()
+                ->default('task'),
+            Select::make('priority')
+                ->options([
+                    'low' => 'Low',
+                    'medium' => 'Medium',
+                    'high' => 'High',
+                    'urgent' => 'Urgent',
+                ])
+                ->required()
+                ->default('medium'),
             Select::make('status')
                 ->options([
+                    'backlog' => 'Backlog',
                     'todo' => 'To Do',
                     'doing' => 'Doing',
+                    'in_review' => 'In Review',
                     'done' => 'Done',
                 ])
                 ->required()
@@ -82,9 +120,11 @@ class TaskForm
                     }
 
                     $statusOrder = [
-                        'todo' => 1,
-                        'doing' => 2,
-                        'done' => 3,
+                        'backlog' => 1,
+                        'todo' => 2,
+                        'doing' => 3,
+                        'in_review' => 4,
+                        'done' => 5,
                     ];
 
                     return $statusOrder[$value] < $statusOrder[$record->status];
@@ -97,9 +137,11 @@ class TaskForm
                             }
 
                             $statusOrder = [
-                                'todo' => 1,
-                                'doing' => 2,
-                                'done' => 3,
+                                'backlog' => 1,
+                                'todo' => 2,
+                                'doing' => 3,
+                                'in_review' => 4,
+                                'done' => 5,
                             ];
 
                             if ($statusOrder[$value] < $statusOrder[$record->status]) {
@@ -110,6 +152,11 @@ class TaskForm
                 ]),
             DateTimePicker::make('due_at')
                 ->label('Due Date')
+                ->firstDayOfWeek(0)
+                ->native(false),
+            DateTimePicker::make('started_at')
+                ->label('Started Date')
+                ->firstDayOfWeek(0)
                 ->native(false),
             TextInput::make('effort_score')
                 ->numeric()

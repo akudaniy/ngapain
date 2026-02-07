@@ -19,10 +19,11 @@ return new class extends Migration
             $table->string('name');
             $table->text('description')->nullable();
             $table->boolean('is_self_initiated')->default(false);
-            $table->enum('status', ['todo', 'doing', 'done'])->default('todo');
+            $table->enum('status', ['backlog', 'todo', 'doing', 'in_review', 'done'])->default('todo');
             $table->integer('effort_score')->default(0);
-            $table->timestamp('completed_at')->nullable();
-            $table->timestamp('due_at')->nullable();
+            $table->datetime('started_at')->nullable();
+            $table->datetime('completed_at')->nullable();
+            $table->datetime('due_at')->nullable();
             $table->timestamps();
         });
     }

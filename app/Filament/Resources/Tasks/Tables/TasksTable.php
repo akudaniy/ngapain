@@ -30,6 +30,27 @@ class TasksTable
                     ->sortable(),
                 TextColumn::make('status')
                     ->badge()
+                    ->color(fn (string $state): string => match ($state) {
+                        'backlog' => 'gray',
+                        'todo' => 'info',
+                        'doing' => 'warning',
+                        'in_review' => 'primary',
+                        'done' => 'success',
+                        default => 'gray',
+                    })
+                    ->sortable(),
+                TextColumn::make('priority')
+                    ->badge()
+                    ->color(fn (string $state): string => match ($state) {
+                        'low' => 'gray',
+                        'medium' => 'info',
+                        'high' => 'warning',
+                        'urgent' => 'danger',
+                        default => 'gray',
+                    })
+                    ->sortable(),
+                TextColumn::make('type')
+                    ->badge()
                     ->sortable(),
                 TextColumn::make('effort_score')
                     ->label('Effort')
@@ -38,6 +59,13 @@ class TasksTable
                     ->label('Due Date')
                     ->dateTime('M d, Y H:i')
                     ->sortable(),
+                TextColumn::make('started_at')
+                    ->label('Started Date')
+                    ->dateTime('M d, Y H:i')
+                    ->sortable(),
+                TextColumn::make('keyResult.name')
+                    ->label('Key Result')
+                    ->limit(20),
             ])
             ->filters([
                 //

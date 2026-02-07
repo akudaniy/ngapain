@@ -15,6 +15,7 @@ class Project extends Model
 
     protected $fillable = [
         'company_id',
+        'key_result_id',
         'name',
     ];
 
@@ -37,5 +38,10 @@ class Project extends Model
         return $this->belongsToMany(User::class)
             ->withPivot('role')
             ->withTimestamps();
+    }
+
+    public function keyResult(): BelongsTo
+    {
+        return $this->belongsTo(KeyResult::class);
     }
 }
