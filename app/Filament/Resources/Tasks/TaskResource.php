@@ -8,6 +8,7 @@ use App\Filament\Resources\Tasks\Pages\ListTasks;
 use App\Filament\Resources\Tasks\Pages\ViewTask;
 use App\Filament\Resources\Tasks\Schemas\TaskForm;
 use App\Filament\Resources\Tasks\Tables\TasksTable;
+use App\Filament\Resources\Tasks\Infolists\TaskInfolist;
 use App\Models\Task;
 use BackedEnum;
 use Filament\Resources\Resource;
@@ -34,6 +35,11 @@ class TaskResource extends Resource
     public static function table(Table $table): Table
     {
         return TasksTable::configure($table);
+    }
+
+    public static function infolist(Schema $schema): Schema
+    {
+        return TaskInfolist::configure($schema);
     }
 
     public static function getRelations(): array

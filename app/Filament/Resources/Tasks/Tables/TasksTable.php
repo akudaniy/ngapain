@@ -19,6 +19,9 @@ class TasksTable
                 TextColumn::make('name')
                     ->searchable()
                     ->sortable(),
+                TextColumn::make('description')
+                    ->limit(50)
+                    ->searchable(),
                 TextColumn::make('project.name')
                     ->label('Project')
                     ->sortable(),

@@ -2,9 +2,9 @@
 
 namespace App\Filament\Resources\Tasks\Schemas;
 
+use Filament\Forms\Components\MarkdownEditor;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
-use Filament\Forms\Components\Textarea;
 use Filament\Forms\Components\DateTimePicker;
 use Filament\Forms\Components\Toggle;
 use Filament\Schemas\Components\Utilities\Get;
@@ -36,8 +36,11 @@ class TaskForm
             TextInput::make('name')
                 ->required()
                 ->maxLength(255),
-            Textarea::make('description')
+            MarkdownEditor::make('description')
                 ->maxLength(65535)
+                ->disableToolbarButtons([
+                    'attachFiles',
+                ])
                 ->columnSpanFull(),
             Toggle::make('is_self_initiated')
                 ->label('Is Self Initiated')
