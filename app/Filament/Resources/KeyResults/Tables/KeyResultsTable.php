@@ -10,25 +10,31 @@ use Filament\Tables\Table;
 
 class KeyResultsTable
 {
-    public static function configure(Table $table): Table
+    public static function configure(Table $table, bool $showObjective = true): Table
     {
-        return $table
-            ->columns([
-                TextColumn::make('objective.name')
-                    ->label('Objective')
-                    ->searchable()
-                    ->sortable(),
-                TextColumn::make('name')
-                    ->searchable()
-                    ->sortable(),
-                TextColumn::make('target_value')
-                    ->numeric()
-                    ->sortable(),
-                TextColumn::make('current_value')
-                    ->numeric()
-                    ->sortable(),
-                TextColumn::make('unit'),
-            ])
+        $columns = [];
+
+        if ($showObjective) {
+            $columns[] = TextColumn::make('objective.name')
+                ->label('Objective')
+                ->searchable()
+                ->sortable();
+        }
+
+        $columns = array_merge($columns, [
+            TextColumn::make('name')
+                ->searchable()
+                ->sortable(),
+            TextColumn::make('target_value')
+                ->numeric()
+                ->sortable(),
+            TextColumn::make('current_value')
+                ->numeric()
+                ->sortable(),
+            TextColumn::make('unit'),
+        ]);
+
+        return $table->columns($columns)
             ->filters([
                 //
             ])

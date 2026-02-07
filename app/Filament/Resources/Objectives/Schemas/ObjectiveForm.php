@@ -14,6 +14,11 @@ class ObjectiveForm
     {
         return $schema
             ->components([
+                Select::make('company_id')
+                    ->relationship('company', 'name')
+                    ->required()
+                    ->searchable()
+                    ->preload(),
                 TextInput::make('name')
                     ->required()
                     ->maxLength(255),

@@ -2,9 +2,13 @@
 
 namespace App\Filament\Resources\Objectives\Tables;
 
+use App\Filament\Resources\Objectives\Pages\ViewObjective;
+use App\Models\Objective;
+use Filament\Actions\ActionGroup;
 use Filament\Actions\BulkActionGroup;
 use Filament\Actions\DeleteBulkAction;
 use Filament\Actions\EditAction;
+use Filament\Actions\ViewAction;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
 
@@ -36,8 +40,12 @@ class ObjectivesTable
             ->filters([
                 //
             ])
+            ->recordUrl(fn (Objective $record): string => ViewObjective::getUrl(['record' => $record]))
             ->recordActions([
-                EditAction::make(),
+                ActionGroup::make([
+                    ViewAction::make(),
+                    EditAction::make(),
+                ]),
             ])
             ->toolbarActions([
                 BulkActionGroup::make([
