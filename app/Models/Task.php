@@ -94,4 +94,17 @@ class Task extends Model
     {
         return $this->belongsTo(KeyResult::class);
     }
+
+    public function getDepth(): int
+    {
+        $depth = 0;
+        $parent = $this->parent;
+
+        while ($parent) {
+            $depth++;
+            $parent = $parent->parent;
+        }
+
+        return $depth;
+    }
 }

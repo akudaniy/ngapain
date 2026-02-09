@@ -30,8 +30,18 @@ class TasksRelationManager extends RelationManager
     {
         return $table
             ->recordTitleAttribute('name')
+            ->modifyQueryUsing(fn ($query) => $query->with(['parent', 'assignedUser']))
             ->columns([
                 TextColumn::make('name')
+                    ->formatStateUsing(function ($record, $state) {
+                        $depth = $record->getDepth();
+                        if ($depth === 0) {
+                            return $state;
+                        }
+
+                        $indent = str_repeat('&nbsp;&nbsp;&nbsp;&nbsp;', $depth);
+                        return new \Illuminate\Support\HtmlString("{$indent} ↳ {$state}");
+                    })
                     ->searchable()
                     ->sortable(),
                 TextColumn::make('assignedUser.name')
@@ -40,9 +50,17 @@ class TasksRelationManager extends RelationManager
                 TextColumn::make('status')
                     ->badge()
                     ->sortable(),
+                TextColumn::make('start_at')
+                    ->label('Start Date')
+                    ->dateTime('M d, Y')
+                    ->sortable(),
                 TextColumn::make('due_at')
                     ->label('Due Date')
-                    ->dateTime('M d, Y H:i')
+                    ->dateTime('M d, Y')
+                    ->sortable(),
+                TextColumn::make('completed_at')
+                    ->label('Completed Date')
+                    ->dateTime('M d, Y')
                     ->sortable(),
                 TextColumn::make('effort_score')
                     ->label('Effort')
@@ -68,15 +86,24 @@ class TasksRelationManager extends RelationManager
                         (auth()->user()->can('Create:Task') && $livewire->getOwnerRecord()->users()->where('users.id', auth()->id())->exists())
                     ),
             ])
-            ->recordActions([
+            ->actions([
                 ActionGroup::make([
                     ViewAction::make()
                         ->url(fn ($record) => route('filament.admin.resources.tasks.view', $record)),
-                    EditAction::make(),
-                    DeleteAction::make(),
+                    EditAction::make()
+                        ->url(fn ($record) => route('filament.admin.resources.tasks.edit', $record))
+                        ->authorize(fn ($record) =>
+                            auth()->user()->hasRole('super_admin') ||
+                            (auth()->user()->can('Update:Task') && $record->project->users()->where('users.id', auth()->id())->exists())
+                        ),
+                    DeleteAction::make()
+                        ->authorize(fn ($record) =>
+                            auth()->user()->hasRole('super_admin') ||
+                            (auth()->user()->can('Delete:Task') && $record->project->users()->where('users.id', auth()->id())->exists())
+                        ),
                 ]),
             ])
-            ->toolbarActions([
+            ->bulkActions([
                 BulkActionGroup::make([
                     DeleteBulkAction::make(),
                 ]),

@@ -19,6 +19,7 @@ class StaffToDoWidget extends TableWidget
         return $table
             ->query(
                 Task::query()
+                    ->with(['project', 'parent'])
                     ->where('assigned_user_id', auth()->id())
                     ->where('status', '!=', 'done')
                     ->latest()
@@ -32,7 +33,16 @@ class StaffToDoWidget extends TableWidget
                 TextColumn::make('name')
                     ->label('Task')
                     ->url(fn (Task $record): string => route('filament.admin.resources.tasks.view', $record))
-                    ->description(fn (Task $record): string => $record->description ?? ''),
+                    ->description(function (Task $record) {
+                        $descriptions = [];
+                        if ($record->parent) {
+                            $descriptions[] = "Part of: {$record->parent->name}";
+                        }
+                        if ($record->description) {
+                            $descriptions[] = $record->description;
+                        }
+                        return implode(' | ', $descriptions);
+                    }),
                 TextColumn::make('status')
                     ->badge()
                     ->color(fn (string $state): string => match ($state) {

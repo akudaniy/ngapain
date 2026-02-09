@@ -61,6 +61,29 @@ class TaskObserver
                 Notification::send($projectManagers, new TaskCompleted($task));
             }
         }
+
+        // Bottom-Up Propagation: propagate status changes to parent
+        if ($task->isDirty('status') && $task->parent_id) {
+            $parent = $task->parent;
+
+            if ($task->status === 'done') {
+                // Scenario A: Check if all siblings are also done
+                $hasUnfinishedSiblings = $parent->subtasks()
+                    ->where('id', '!=', $task->id)
+                    ->where('status', '!=', 'done')
+                    ->exists();
+
+                if (!$hasUnfinishedSiblings) {
+                    $parent->update(['status' => 'done']);
+                }
+            } elseif ($task->getOriginal('status') === 'done') {
+                // Scenario B: Child was reopened, must reopen parent too
+                if ($parent->status === 'done') {
+                    // Move parent back to doing (or whatever is appropriate, 'doing' is safest)
+                    $parent->update(['status' => 'doing']);
+                }
+            }
+        }
     }
 
     /**

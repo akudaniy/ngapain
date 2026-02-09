@@ -131,3 +131,24 @@ The `$heading` property is **non-static** in v5.
 ```php
 protected ?string $heading = 'My Chart';
 ```
+
+#### **G. Table Actions Namespace & Methods**
+In v5, `Filament\Tables\Actions` is obsolete. Use the generic `Filament\Actions` namespace for table actions. Additionally, use `actions()` and `bulkActions()` instead of `recordActions()` and `toolbarActions()`.
+```php
+use Filament\Actions\EditAction;
+use Filament\Actions\BulkActionGroup;
+use Filament\Actions\DeleteBulkAction;
+
+public function table(Table $table): Table
+{
+    return $table
+        ->actions([
+            EditAction::make(),
+        ])
+        ->bulkActions([
+            BulkActionGroup::make([
+                DeleteBulkAction::make(),
+            ]),
+        ]);
+}
+```
