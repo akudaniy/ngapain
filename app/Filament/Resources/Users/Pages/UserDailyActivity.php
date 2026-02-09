@@ -37,6 +37,43 @@ class UserDailyActivity extends Page
         ];
     }
 
+    protected function getHeaderActions(): array
+    {
+        return [
+            \Filament\Actions\Action::make('previous_day')
+                ->label('Previous Day')
+                ->icon('heroicon-m-chevron-left')
+                ->color('gray')
+                ->url(fn () => UserResource::getUrl('stats', [
+                    'record' => $this->record,
+                    'date' => Carbon::parse($this->date)->subDay()->toDateString(),
+                ])),
+            \Filament\Actions\Action::make('select_date')
+                ->label('Select Date')
+                ->icon('heroicon-m-calendar')
+                ->form([
+                    \Filament\Forms\Components\DatePicker::make('date')
+                        ->default($this->date)
+                        ->required(),
+                ])
+                ->action(function (array $data) {
+                    return redirect(UserResource::getUrl('stats', [
+                        'record' => $this->record,
+                        'date' => $data['date'],
+                    ]));
+                }),
+            \Filament\Actions\Action::make('next_day')
+                ->label('Next Day')
+                ->icon('heroicon-m-chevron-right')
+                ->color('gray')
+                ->iconPosition(\Filament\Support\Enums\IconPosition::After)
+                ->url(fn () => UserResource::getUrl('stats', [
+                    'record' => $this->record,
+                    'date' => Carbon::parse($this->date)->addDay()->toDateString(),
+                ])),
+        ];
+    }
+
     protected function getViewData(): array
     {
         $date = Carbon::parse($this->date);
