@@ -21,6 +21,11 @@ class Settings extends Page implements HasForms
 
     protected string $view = 'filament.pages.settings';
 
+    public static function getLabel(): string
+    {
+        return 'Settings';
+    }
+
     protected static bool $shouldRegisterNavigation = false;
 
     public ?array $data = [];

@@ -84,6 +84,9 @@ class ProjectResource extends Resource
                                 return $record->users()->count();
                             })
                             ->label('Team Size'),
+
+                        \Filament\Schemas\Components\Livewire::make(\App\Filament\Resources\Projects\Widgets\ProjectStatusChart::class)
+                            ->columnSpanFull(),
                     ])->columns(2),
             ]);
     }

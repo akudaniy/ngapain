@@ -117,3 +117,17 @@ class MyPage extends Page implements HasForms
     use InteractsWithForms;
 }
 ```
+
+#### **E. Livewire Components in Infolists**
+Use the `Livewire` component from the `Schemas` namespace. The `record` is automatically passed to the component.
+* **Namespace:** `Filament\Schemas\Components\Livewire`
+* **Usage:**
+```php
+\Filament\Schemas\Components\Livewire::make(\App\Livewire\MyComponent::class)
+```
+
+#### **F. Chart Widgets**
+The `$heading` property is **non-static** in v5.
+```php
+protected ?string $heading = 'My Chart';
+```
