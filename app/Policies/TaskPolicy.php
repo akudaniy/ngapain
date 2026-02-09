@@ -11,7 +11,7 @@ use Illuminate\Auth\Access\HandlesAuthorization;
 class TaskPolicy
 {
     use HandlesAuthorization;
-    
+
     public function viewAny(AuthUser $authUser): bool
     {
         return $authUser->can('ViewAny:Task');
@@ -29,7 +29,12 @@ class TaskPolicy
 
     public function update(AuthUser $authUser, Task $task): bool
     {
-        return $authUser->can('Update:Task');
+        if ($authUser->hasRole('super_admin')) {
+            return true;
+        }
+
+        return $authUser->can('Update:Task') &&
+               $task->project->users()->where('users.id', $authUser->id)->exists();
     }
 
     public function delete(AuthUser $authUser, Task $task): bool

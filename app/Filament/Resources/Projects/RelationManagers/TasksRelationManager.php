@@ -63,7 +63,10 @@ class TasksRelationManager extends RelationManager
             ->headerActions([
                 CreateAction::make()
                     ->label('Add Task')
-                    ->authorize(fn () => auth()->user()->can('Create:Task')),
+                    ->authorize(fn (RelationManager $livewire) =>
+                        auth()->user()->hasRole('super_admin') ||
+                        (auth()->user()->can('Create:Task') && $livewire->getOwnerRecord()->users()->where('users.id', auth()->id())->exists())
+                    ),
             ])
             ->recordActions([
                 ActionGroup::make([

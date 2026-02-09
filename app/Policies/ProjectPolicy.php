@@ -11,7 +11,7 @@ use Illuminate\Auth\Access\HandlesAuthorization;
 class ProjectPolicy
 {
     use HandlesAuthorization;
-    
+
     public function viewAny(AuthUser $authUser): bool
     {
         return $authUser->can('ViewAny:Project');
@@ -29,7 +29,15 @@ class ProjectPolicy
 
     public function update(AuthUser $authUser, Project $project): bool
     {
-        return $authUser->can('Update:Project');
+        if ($authUser->hasRole('super_admin')) {
+            return true;
+        }
+
+        return $authUser->can('Update:Project') &&
+               $project->users()
+                   ->where('users.id', $authUser->id)
+                   ->wherePivot('role', 'manager')
+                   ->exists();
     }
 
     public function delete(AuthUser $authUser, Project $project): bool
